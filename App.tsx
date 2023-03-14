@@ -1,20 +1,85 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { ResizeMode, Video } from "expo-av";
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+
+const Stack = createNativeStackNavigator();
+
+const Home = () => {
+  const navigation = useNavigation();
+
+  return (
+    <>
+      <Text>Home Screen - Portrait</Text>
+      <Button title="Next" onPress={() => navigation.navigate("Landscape")} />
+    </>
+  );
+};
+
+const Landscape = () => {
+  const navigation = useNavigation();
+
+  return (
+    <>
+      <Text>Landscape Screen</Text>
+      <Button
+        title="Back"
+        onPress={() =>
+          navigation.dispatch({
+            type: "RESET",
+            payload: { index: 0, routes: [{ name: "Home" }] },
+          })
+        }
+      />
+    </>
+  );
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{ animation: "none", headerShown: false }}
+      >
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            orientation: "portrait",
+            contentStyle: {
+              flex: 1,
+              backgroundColor: "#abc",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Landscape"
+          component={Landscape}
+          options={{
+            orientation: "landscape",
+            contentStyle: {
+              flex: 1,
+              backgroundColor: "#cba",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
